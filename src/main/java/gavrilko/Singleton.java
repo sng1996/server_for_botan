@@ -20,7 +20,6 @@ public class Singleton {
     }
 
     public void add(Integer id, WebSocketSession session) {
-        System.out.println("HELLO WORLD");
         connectedUsers.put(id, session);
     }
 

@@ -17,10 +17,10 @@ public class OrderAbstractController {
         return orderService.addOrder(body);
     }
 
-    @RequestMapping(path = "/order/remove", method = RequestMethod.POST)
-    public ResponseEntity removeOrder(@RequestBody Order body) throws JsonProcessingException {
+    @RequestMapping(path = "/order/remove", method = RequestMethod.GET)
+    public ResponseEntity removeOrder(@RequestParam("id") Integer id) throws JsonProcessingException {
         OrderService orderService = new OrderService();
-        return orderService.removeOrder(body);
+        return orderService.removeOrder(id);
     }
 
     @RequestMapping(path = "/order/edit", method = RequestMethod.POST)
@@ -29,16 +29,20 @@ public class OrderAbstractController {
         return orderService.editOrder(body);
     }
 
-    @RequestMapping(path = "/order/take", method = RequestMethod.POST)
-    public ResponseEntity takeOrder(@RequestBody Order body) throws JsonProcessingException {
+    @RequestMapping(path = "/order/take", method = RequestMethod.GET)
+    public ResponseEntity takeOrder(@RequestParam("id") Integer id,
+                                    @RequestParam("executor") Integer executor,
+                                    @RequestParam("cost") Integer cost,
+                                    @RequestParam("date") String date) throws JsonProcessingException {
         OrderService orderService = new OrderService();
-        return orderService.takeOrder(body);
+        return orderService.takeOrder(id, executor, cost, date);
     }
 
-    @RequestMapping(path = "/order/set_executor", method = RequestMethod.POST)
-    public ResponseEntity set_executorOrder(@RequestBody Order body) throws JsonProcessingException {
+    @RequestMapping(path = "/order/set_executor", method = RequestMethod.GET)
+    public ResponseEntity set_executorOrder(@RequestParam("id_order") Integer id,
+                                            @RequestParam("id_executor") Integer executor) throws JsonProcessingException {
         OrderService orderService = new OrderService();
-        return orderService.set_executorOrder(body);
+        return orderService.set_executor(id, executor);
     }
 
     @RequestMapping(path = "/order/get_all_orders", method = RequestMethod.GET)
@@ -47,10 +51,10 @@ public class OrderAbstractController {
         return orderService.get_all_Order();
     }
 
-    @RequestMapping(path = "/order/current_orders", method = RequestMethod.POST)
-    public ResponseEntity currentOrder(@RequestBody Order body) throws JsonProcessingException {
+    @RequestMapping(path = "/order/current_orders", method = RequestMethod.GET)
+    public ResponseEntity currentOrder(@RequestParam("id") Integer id) throws JsonProcessingException {
         OrderService orderService = new OrderService();
-        return orderService.currentOrder(body);
+        return orderService.currentOrder(id);
     }
 
     @RequestMapping(path = "/order/add_review", method = RequestMethod.POST)
@@ -63,6 +67,12 @@ public class OrderAbstractController {
     public ResponseEntity addLikeOrder(@RequestBody Order body) throws JsonProcessingException {
         OrderService orderService = new OrderService();
         return orderService.addLikeOrder(body);
+    }
+
+    @RequestMapping(path = "/order/change_status", method = RequestMethod.GET)
+    public ResponseEntity change_status(@RequestParam("id") Integer id, @RequestParam("status") Integer status) throws JsonProcessingException {
+        OrderService orderService = new OrderService();
+        return orderService.change_status(id, status);
     }
 
 }

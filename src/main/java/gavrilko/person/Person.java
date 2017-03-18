@@ -118,6 +118,7 @@ public class Person {
         profileInfoResponse.put("photo", photo);
         profileInfoResponse.put("balance", balance);
         profileInfoResponse.put("password", password);
+        System.out.println("password = " + password);
         return profileInfoResponse;
     }
 

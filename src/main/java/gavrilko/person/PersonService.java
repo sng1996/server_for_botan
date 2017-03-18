@@ -2,6 +2,7 @@ package gavrilko.person;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import gavrilko.database.Database;
 import org.springframework.http.ResponseEntity;
@@ -59,10 +60,11 @@ public class PersonService {
     }
 
     public ResponseEntity profilePerson(Integer id) throws JsonProcessingException {
+        System.out.println("I'm here " + id);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode response = mapper.createObjectNode();
         try {
-            Database.select("select * from profile join review using(id_p) where id_p = " + id + ";",  result->{
+            Database.select("select * from profile left join reviews using(id_p) where id_p = " + id + ";",  result->{
                 result.next();
                 Person person = new Person(result.getInt("id_p"), result.getString("email"), result.getString("phone"), result.getString("name"), result.getInt("rating"), result.getString("photo"), result.getInt("balance"), result.getString("password"));
                 response.put("code", 0);
@@ -72,10 +74,38 @@ public class PersonService {
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            response.put("code", 0);
+            response.put("code", 1);
             response.put("response", 1);
         } catch (SQLException e) {
-            response.put("code", 0);
+            response.put("code",2);
+            response.put("response", 2);
+        }
+        return ResponseEntity.ok().body(mapper.writeValueAsString(response));
+    }
+
+    public ResponseEntity get_executors(Integer id) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode response = mapper.createObjectNode();
+        ArrayNode resp = mapper.createArrayNode();
+        try {
+            Database.select("select * from executor join profile using(id_p) where id_o = " + id + "",  result->{
+                while (result.next()) {
+                    Person person = new Person(result.getInt("id_p"), result.getString("email"), result.getString("phone"), result.getString("name"), result.getInt("rating"), result.getString("photo"), result.getInt("balance"), result.getString("password"));
+                    ObjectNode node = person.getProfileInfo();
+                    node.put("cost", result.getInt("cost"));
+                    node.put("date", result.getString("date"));
+                    resp.add(node);
+                }
+                response.put("code", 107);
+                response.set("response", resp);
+                return ResponseEntity.ok().body(mapper.writeValueAsString(response));
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            response.put("code", 1);
+            response.put("response", 1);
+        } catch (SQLException e) {
+            response.put("code", 2);
             response.put("response", 2);
         }
         return ResponseEntity.ok().body(mapper.writeValueAsString(response));

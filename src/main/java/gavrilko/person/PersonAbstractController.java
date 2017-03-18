@@ -1,6 +1,7 @@
 package gavrilko.person;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import gavrilko.orders.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,12 @@ public class PersonAbstractController {
     public ResponseEntity profilePerson(@RequestParam("id") Integer id) throws JsonProcessingException {
         PersonService personService = new PersonService();
         return personService.profilePerson(id);
+    }
+
+    @RequestMapping(path = "/person/get_executors", method = RequestMethod.GET)
+    public ResponseEntity get_executors(@RequestParam("id") Integer id) throws JsonProcessingException {
+        PersonService personService = new PersonService();
+        return personService.get_executors(id);
     }
 
 }
