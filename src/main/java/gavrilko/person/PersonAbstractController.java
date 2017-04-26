@@ -30,10 +30,16 @@ public class PersonAbstractController {
         return personService.profilePerson(id);
     }
 
-    @RequestMapping(path = "/person/get_executors", method = RequestMethod.GET)
-    public ResponseEntity get_executors(@RequestParam("id") Integer id) throws JsonProcessingException {
+    @RequestMapping(path = "/person/more_info", method = RequestMethod.GET)
+    public ResponseEntity more_info(@RequestParam("id") Integer id) throws JsonProcessingException {
         PersonService personService = new PersonService();
-        return personService.get_executors(id);
+        return personService.more_info(id);
+    }
+
+    @RequestMapping(path = "/person/get_performers", method = RequestMethod.GET)
+    public ResponseEntity get_performers(@RequestParam("id") Integer id) throws JsonProcessingException {
+        PersonService personService = new PersonService();
+        return personService.get_performers(id);
     }
 
 }

@@ -114,7 +114,7 @@ public class OrderService {
         ObjectNode response = mapper.createObjectNode();
         try {
 
-            Database.update("update orders set executor = " + executor + " where id_o = " + id + ";");
+            Database.update("update orders set executor = " + executor + ", status = 1 where id_o = " + id + ";");
             response.put("code", 108);
             response.put("response", 0);
             return ResponseEntity.ok().body(mapper.writeValueAsString(response));
@@ -260,5 +260,4 @@ public class OrderService {
             return ResponseEntity.ok().body(mapper.writeValueAsString(response));
         }
     }
-
 }
