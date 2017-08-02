@@ -19,19 +19,28 @@ public class MessageService {
         ObjectNode response = mapper.createObjectNode();
         ArrayNode resp = mapper.createArrayNode();
         try {
-            Database.select("select id_o, name from orders join profile on id_p = executor where client = " + id + " and status = 1", result->{
+            Database.select("select id_o from orders where (client = " + id + " or executor = " + id + ") and status = 1", result->{
                 while (result.next()) {
                     ObjectNode node = mapper.createObjectNode();
-                    Database.select("select message, sender, date from messages where date = (select max(date) from messages where id_o = " + result.getInt("id_o") + ")", result1->{
+                    Database.select("select message, sender, date, reciever from messages where date = (select max(date) from messages where id_o = " + result.getInt("id_o") + ")", result1->{
                         result1.next();
                         node.put("order_id", result.getInt("id_o"));
                         if (result1.getInt("sender") == id){
                             node.put("is_my", 1);
+                            Database.select("select name from profile where id_p = " + result1.getInt("reciever") + "", result2->{
+                                result2.next();
+                                node.put("companion_id", result1.getInt("reciever"));
+                                node.put("name", result2.getString("name"));
+                            });
                         }
                         else{
                             node.put("is_my", 0);
+                            Database.select("select name from profile where id_p = " + result1.getInt("sender") + "", result2->{
+                                result2.next();
+                                node.put("companion_id", result1.getInt("sender"));
+                                node.put("name", result2.getString("name"));
+                            });
                         }
-                        node.put("name", result.getString("name"));
                         node.put("message", result1.getString("message"));
                         node.put("date", result1.getString("date"));
                     });
@@ -39,6 +48,7 @@ public class MessageService {
                 }
                 response.put("code", 110);
                 response.set("response", resp);
+                System.out.println(mapper.writeValueAsString(response));
                 return ResponseEntity.ok().body(mapper.writeValueAsString(response));
             });
         } catch (JsonProcessingException e) {

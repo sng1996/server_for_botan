@@ -11,5 +11,15 @@
       <user-name>root</user-name>
       <resolve-scope>botandb:</resolve-scope>
     </data-source>
+    <data-source name="heroku_94ba4191f4af452@us-cdbr-iron-east-03.cleardb.net" uuid="4c8f8e36-1433-46d5-8c94-1d61fbca7682">
+      <database-info product="MySQL" version="5.5.56-log" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>b717f1fcc80184</user-name>
+      <resolve-scope>heroku_94ba4191f4af452:</resolve-scope>
+    </data-source>
   </component>
 </project>
