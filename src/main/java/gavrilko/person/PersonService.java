@@ -50,11 +50,9 @@ public class PersonService {
             e.printStackTrace();
             response.put("code", 1);
             response.put("response", "JSON error");
-            System.out.println("JSON");
         } catch (SQLException e) {
             response.put("code", 2);
             response.put("response", "SQL error");
-            System.out.println("SQL");
         }
         return ResponseEntity.ok().body(mapper.writeValueAsString(response));
     }

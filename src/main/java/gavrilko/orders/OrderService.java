@@ -15,11 +15,11 @@ import java.sql.SQLException;
  */
 public class OrderService {
 
-    public ResponseEntity addOrder(Order body) throws JsonProcessingException {
+    public ResponseEntity createOrder(Order body) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode response = mapper.createObjectNode();
         try {
-            Database.update("insert into orders VALUES (NULL, \'" + body.getSubject() + "\', " + body.getType() + ", " + body.getCategory() + ", \'" + body.getDescription() + "\', \'" + body.getCreate_date() + "\', \'" + body.getEnd_date() + "\', " + body.getCost() + ", " + body.getClient() + ", " + body.getExecutor() + ", " + body.getStatus() + ", \'" + body.getReview() + "\', " + body.getLike() + ")");
+            Database.update("insert into orders VALUES (NULL, \'" + body.getSubject() + "\', " + body.getType() + ", " + body.getCategory() + ", \'" + body.getDescription() + "\', \'" + body.getCreate_date() + "\', \'" + body.getEnd_date() + "\', " + body.getCost() + ", " + body.getClient() + ", NULL, 0, NULL, NULL)");
             Database.select("select max(id_o) as m from orders;",  result->{
                 result.next();
                 response.put("code", 104);
@@ -29,10 +29,10 @@ public class OrderService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             response.put("code", 1);
-            response.put("response", 0);
+            response.put("response", "JSON error");
         } catch (SQLException e) {
             response.put("code", 2);
-            response.put("response", 0);
+            response.put("response", "SQL error");
         }
         return ResponseEntity.ok().body(mapper.writeValueAsString(response));
     }
@@ -130,7 +130,7 @@ public class OrderService {
         }
     }
 
-    public ResponseEntity get_all_Order() throws JsonProcessingException {
+    public ResponseEntity getNewOrders() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode response = mapper.createObjectNode();
         final ArrayNode resp = mapper.createArrayNode();

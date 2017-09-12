@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 public class OrderAbstractController {
 
     @RequestMapping(path = "/order/create", method = RequestMethod.POST)
-    public ResponseEntity addOrder(@RequestBody Order body) throws JsonProcessingException {
+    public ResponseEntity createOrder(@RequestBody Order body) throws JsonProcessingException {
         OrderService orderService = new OrderService();
-        return orderService.addOrder(body);
+        return orderService.createOrder(body);
     }
 
     @RequestMapping(path = "/order/remove", method = RequestMethod.GET)
@@ -45,10 +45,10 @@ public class OrderAbstractController {
         return orderService.set_executor(id, executor);
     }
 
-    @RequestMapping(path = "/order/get_all_orders", method = RequestMethod.GET)
-    public ResponseEntity get_all_Order() throws JsonProcessingException {
+    @RequestMapping(path = "/order/new", method = RequestMethod.GET)
+    public ResponseEntity getNewOrders() throws JsonProcessingException {
         OrderService orderService = new OrderService();
-        return orderService.get_all_Order();
+        return orderService.getNewOrders();
     }
 
     @RequestMapping(path = "/order/current_orders", method = RequestMethod.GET)
