@@ -112,12 +112,12 @@ public class OrderService {
         }
     }
 
-    public ResponseEntity set_executor(Integer id, Integer executor) throws JsonProcessingException {
+    public ResponseEntity set_executor(Order body) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode response = mapper.createObjectNode();
         try {
 
-            Database.update("update orders set executor = " + executor + ", status = 1 where id_o = " + id + ";");
+            Database.update("update orders set executor = " + body.getExecutor() + ", status = 1, cost = " + body.getCost() + " where id_o = " + body.getId() + ";");
             response.put("code", 108);
             response.put("response", 0);
             return ResponseEntity.ok().body(mapper.writeValueAsString(response));
@@ -263,6 +263,8 @@ public class OrderService {
             return ResponseEntity.ok().body(mapper.writeValueAsString(response));
         }
     }
+
+
 
     /*public ResponseEntity waiting(Integer user_id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
