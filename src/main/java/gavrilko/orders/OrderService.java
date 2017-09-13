@@ -166,7 +166,7 @@ public class OrderService {
         final ArrayNode resp = mapper.createArrayNode();
         try {
 
-            Database.select("select * from orders where executor = " + id + " and status = 1",  result->{ //заказы в процессе
+            Database.select("select * from orders where (executor = " + id + " and status = 1) or id_o in (select id_o from executor where id_p = " + id + ")",  result->{ //заказы в процессе
                 while (result.next()) {
                     Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("description"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"), "");
                     resp.add(order.getOrderInfo());

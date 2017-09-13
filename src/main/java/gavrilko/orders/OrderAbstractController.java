@@ -48,13 +48,13 @@ public class OrderAbstractController {
     }
 
     @RequestMapping(path = "/order/perform", method = RequestMethod.GET)
-    public ResponseEntity currentOrder(@RequestParam("id") Integer id) throws JsonProcessingException {
+    public ResponseEntity performOrder(@RequestParam("id") Integer id) throws JsonProcessingException {
         OrderService orderService = new OrderService();
         return orderService.performOrder(id);
     }
 
     @RequestMapping(path = "/order/ordered", method = RequestMethod.GET)
-    public ResponseEntity currentOrder(@RequestParam("id") Integer id) throws JsonProcessingException {
+    public ResponseEntity orderedOrder(@RequestParam("id") Integer id) throws JsonProcessingException {
         OrderService orderService = new OrderService();
         return orderService.orderedOrder(id);
     }
