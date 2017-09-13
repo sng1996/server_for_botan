@@ -8,7 +8,11 @@ import gavrilko.database.Database;
 import gavrilko.person.Person;
 import org.springframework.http.ResponseEntity;
 
+import java.sql.Array;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Int;
 
 /**
  * Created by sergeigavrilko on 05.03.17.
@@ -247,6 +251,31 @@ public class OrderService {
             Database.update("update orders set status = " + status + " where id_o = " + id + ";");
             response.put("code", 102);
             response.put("response", 0);
+            return ResponseEntity.ok().body(mapper.writeValueAsString(response));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            response.put("code", 0);
+            response.put("response", 1);
+            return ResponseEntity.ok().body(mapper.writeValueAsString(response));
+        } catch (SQLException e) {
+            response.put("code", 0);
+            response.put("response", 2);
+            return ResponseEntity.ok().body(mapper.writeValueAsString(response));
+        }
+    }
+
+    public ResponseEntity waiting(Integer user_id) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode response = mapper.createObjectNode();
+        final ArrayNode resp = mapper.createArrayNode();
+        try {
+            Database.select("select * from executor where id_p = " + user_id,  result->{
+                while (result.next()) {
+                    resp.add(result.getInt("id_o"));
+                }
+                response.put("code", 0);
+                response.set("response", resp);
+            });
             return ResponseEntity.ok().body(mapper.writeValueAsString(response));
         } catch (JsonProcessingException e) {
             e.printStackTrace();

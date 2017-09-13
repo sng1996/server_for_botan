@@ -72,4 +72,10 @@ public class OrderAbstractController {
         return orderService.change_status(id, status);
     }
 
+    @RequestMapping(path = "/order/waiting", method = RequestMethod.GET)
+    public ResponseEntity waiting(@RequestParam("user_id") Integer user_id) throws JsonProcessingException {
+        OrderService orderService = new OrderService();
+        return orderService.waiting(user_id);
+    }
+
 }
