@@ -43,9 +43,9 @@ public class OrderAbstractController {
     }
 
     @RequestMapping(path = "/order/new", method = RequestMethod.GET)
-    public ResponseEntity getNewOrders() throws JsonProcessingException {
+    public ResponseEntity getNewOrders(@RequestParam("user_id") Integer user_id) throws JsonProcessingException {
         OrderService orderService = new OrderService();
-        return orderService.getNewOrders();
+        return orderService.getNewOrders(user_id);
     }
 
     @RequestMapping(path = "/order/current_orders", method = RequestMethod.GET)
@@ -72,10 +72,10 @@ public class OrderAbstractController {
         return orderService.change_status(id, status);
     }
 
-    @RequestMapping(path = "/order/waiting", method = RequestMethod.GET)
+    /*@RequestMapping(path = "/order/waiting", method = RequestMethod.GET)
     public ResponseEntity waiting(@RequestParam("user_id") Integer user_id) throws JsonProcessingException {
         OrderService orderService = new OrderService();
         return orderService.waiting(user_id);
-    }
+    }*/
 
 }
