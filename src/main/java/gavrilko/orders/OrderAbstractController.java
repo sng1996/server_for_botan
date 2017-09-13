@@ -29,13 +29,10 @@ public class OrderAbstractController {
         return orderService.editOrder(body);
     }
 
-    @RequestMapping(path = "/order/take", method = RequestMethod.GET)
-    public ResponseEntity takeOrder(@RequestParam("id") Integer id,
-                                    @RequestParam("executor") Integer executor,
-                                    @RequestParam("cost") Integer cost,
-                                    @RequestParam("date") String date) throws JsonProcessingException {
+    @RequestMapping(path = "/order/take", method = RequestMethod.POST)
+    public ResponseEntity takeOrder(@RequestBody Order body) throws JsonProcessingException {
         OrderService orderService = new OrderService();
-        return orderService.takeOrder(id, executor, cost, date);
+        return orderService.takeOrder(body);
     }
 
     @RequestMapping(path = "/order/set_executor", method = RequestMethod.GET)

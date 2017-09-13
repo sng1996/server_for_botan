@@ -21,13 +21,14 @@ public class Order {
     private Integer status;
     private String review;
     private Boolean like;
+    private String date;
 
     ObjectMapper mapper = new ObjectMapper();
 
     public Order() {
     }
 
-    public Order(Integer id, String subject, Integer type, Integer category, String create_date, String end_date, Integer cost, String description, Integer client, Integer executor, Integer status, String review, Boolean like) {
+    public Order(Integer id, String subject, Integer type, Integer category, String create_date, String end_date, Integer cost, String description, Integer client, Integer executor, Integer status, String review, Boolean like, String date) {
         this.subject = subject;
         this.type = type;
         this.category = category;
@@ -41,6 +42,7 @@ public class Order {
         this.id = id;
         this.review = review;
         this.like = like;
+        this.date = date;
 
     }
     public Integer getId() { return id; }
@@ -78,6 +80,8 @@ public class Order {
     public Integer getExecutor() { return executor; }
 
     public Integer getStatus() { return status; }
+
+    public String getDate() { return date; }
 
     public void setId(Integer id) { this.id = id; }
 
@@ -120,6 +124,8 @@ public class Order {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    public void setDate(String date) { this.date = date; }
 
     public ObjectNode getOrderInfo(){
         final ObjectNode orderInfoResponse = mapper.createObjectNode();

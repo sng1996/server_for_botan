@@ -87,14 +87,13 @@ public class OrderService {
         }
     }
 
-    public ResponseEntity takeOrder(Integer id, Integer executor, Integer cost, String date) throws JsonProcessingException {
+    public ResponseEntity takeOrder(Order body) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode response = mapper.createObjectNode();
-        System.out.println(id + " " + executor + " " + cost + " " + date);
         try {
 
-            Database.update("insert into executor values (NULL, " + id + ", " + executor + ", " + cost + ", \'" + date + "\')");
-            response.put("code", 103);
+            Database.update("insert into executor values (NULL, " + body.getId() + ", " + body.getExecutor() + ", " + body.getCost() + ", \'" + body.getDate() + "\')");
+            response.put("code", 0);
             response.put("response", 0);
             return ResponseEntity.ok().body(mapper.writeValueAsString(response));
         } catch (JsonProcessingException e) {
@@ -137,7 +136,7 @@ public class OrderService {
         try {
             Database.select("select * from orders where status = 0",  result->{ //свободные заказы
                 while (result.next()) {
-                    Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("discription"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"));
+                    Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("discription"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"), "");
                     resp.add(order.getOrderInfo());
                 }
                 response.put("code", 0);
@@ -165,7 +164,7 @@ public class OrderService {
 
             Database.select("select * from orders where (client = " + id + " or executor = " + id + ")",  result->{ //заказы в процессе
                 while (result.next()) {
-                    Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("description"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"));
+                    Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("description"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"), "");
                     resp.add(order.getOrderInfo());
                 }
                 response.put("code", 0);
@@ -193,7 +192,7 @@ public class OrderService {
 
             Database.select("select * from orders where (client = " + body.getId() + " or executor = " + body.getId() + ") and status = 2",  result->{ //заказы выполненные
                 while (result.next()) {
-                    Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("description"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"));
+                    Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("description"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"), "");
                     resp.add(order.getOrderInfo());
                 }
                 response.put("code", 0);
