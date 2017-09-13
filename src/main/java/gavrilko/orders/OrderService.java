@@ -160,13 +160,41 @@ public class OrderService {
         return ResponseEntity.ok().body(mapper.writeValueAsString(response));
     }
 
-    public ResponseEntity currentOrder(Integer id) throws JsonProcessingException {
+    public ResponseEntity performOrder(Integer id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode response = mapper.createObjectNode();
         final ArrayNode resp = mapper.createArrayNode();
         try {
 
-            Database.select("select * from orders where (client = " + id + " or executor = " + id + ")",  result->{ //заказы в процессе
+            Database.select("select * from orders where executor = " + id + " and status = 1",  result->{ //заказы в процессе
+                while (result.next()) {
+                    Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("description"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"), "");
+                    resp.add(order.getOrderInfo());
+                }
+                response.put("code", 0);
+                response.set("response", resp);
+                return ResponseEntity.ok().body(mapper.writeValueAsString(response));
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            response.put("code", 0);
+            response.put("response", 1);
+            //return ResponseEntity.ok().body(mapper.writeValueAsString(response));
+        } catch (SQLException e) {
+            response.put("code", 0);
+            response.put("response", 2);
+            //return ResponseEntity.ok().body(mapper.writeValueAsString(response));
+        }
+        return ResponseEntity.ok().body(mapper.writeValueAsString(response));
+    }
+
+    public ResponseEntity orderedOrder(Integer id) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode response = mapper.createObjectNode();
+        final ArrayNode resp = mapper.createArrayNode();
+        try {
+
+            Database.select("select * from orders where client = " + id + " and status = 1",  result->{ //заказы в процессе
                 while (result.next()) {
                     Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("description"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"), "");
                     resp.add(order.getOrderInfo());

@@ -47,10 +47,16 @@ public class OrderAbstractController {
         return orderService.getNewOrders(user_id);
     }
 
-    @RequestMapping(path = "/order/current_orders", method = RequestMethod.GET)
+    @RequestMapping(path = "/order/perform", method = RequestMethod.GET)
     public ResponseEntity currentOrder(@RequestParam("id") Integer id) throws JsonProcessingException {
         OrderService orderService = new OrderService();
-        return orderService.currentOrder(id);
+        return orderService.performOrder(id);
+    }
+
+    @RequestMapping(path = "/order/ordered", method = RequestMethod.GET)
+    public ResponseEntity currentOrder(@RequestParam("id") Integer id) throws JsonProcessingException {
+        OrderService orderService = new OrderService();
+        return orderService.orderedOrder(id);
     }
 
     @RequestMapping(path = "/order/add_review", method = RequestMethod.POST)
