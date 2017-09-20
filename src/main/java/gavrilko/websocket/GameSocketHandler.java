@@ -24,6 +24,9 @@ public class GameSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession webSocketSession) throws AuthenticationException {
+
+        System.out.println("CONNECTED");
+
     }
 
     @SuppressWarnings("OverlyBroadCatchBlock")

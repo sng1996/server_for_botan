@@ -47,6 +47,7 @@ public class OrderService {
         ObjectNode response = mapper.createObjectNode();
         try {
             Database.update("DELETE from orders where id_o = " + id + ";");
+            Database.update("DELETE from executor where id_o = " + id + ";");
             response.put("code", 101);
             response.put("response", 0);
             return ResponseEntity.ok().body(mapper.writeValueAsString(response));
@@ -167,7 +168,7 @@ public class OrderService {
         final ArrayNode resp = mapper.createArrayNode();
         try {
 
-            Database.select("select * from orders where (executor = " + id + " and status = 1) or id_o in (select id_o from executor where id_p = " + id + ")",  result->{ //заказы в процессе
+            Database.select("select * from orders where (executor = " + id + " and (status = 1 or status = 2 or status = 4)) or id_o in (select id_o from executor where id_p = " + id + ")",  result->{ //заказы в процессе
                 while (result.next()) {
                     Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("discription"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"), "");
                     resp.add(order.getOrderInfo());
@@ -195,7 +196,7 @@ public class OrderService {
         final ArrayNode resp = mapper.createArrayNode();
         try {
 
-            Database.select("select * from orders where client = " + id + " and status = 1",  result->{ //заказы в процессе
+            Database.select("select * from orders where client = " + id + " and (status = 1 or status = 2 or status = 4)",  result->{ //заказы в процессе
                 while (result.next()) {
                     Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("discription"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"), "");
                     resp.add(order.getOrderInfo());
@@ -223,7 +224,7 @@ public class OrderService {
         final ArrayNode resp = mapper.createArrayNode();
         try {
 
-            Database.select("select * from orders where (client = " + body.getId() + " or executor = " + body.getId() + ") and status = 2",  result->{ //заказы выполненные
+            Database.select("select * from orders where (client = " + body.getId() + " or executor = " + body.getId() + ") and status = 3",  result->{ //заказы выполненные
                 while (result.next()) {
                     Order order = new Order(result.getInt("id_o"), result.getString("subject"), result.getInt("type"), result.getInt("category"), result.getString("create_date"), result.getString("end_date"), result.getInt("cost"), result.getString("description"), result.getInt("client"), result.getInt("executor"), result.getInt("status"), result.getString("review"), result.getBoolean("likes"), "");
                     resp.add(order.getOrderInfo());
