@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class MessageAbstractController {
 
-    @RequestMapping(path = "/message/get_contacts", method = RequestMethod.GET)
-    public ResponseEntity get_contacts(@RequestParam("id") Integer id) throws JsonProcessingException {
+    @RequestMapping(path = "/message/contacts", method = RequestMethod.GET)
+    public ResponseEntity contacts(@RequestParam("user_id") Integer id) throws JsonProcessingException {
         MessageService messageService = new MessageService();
-        return messageService.get_contacts(id);
+        return messageService.contacts(id);
     }
 
 }

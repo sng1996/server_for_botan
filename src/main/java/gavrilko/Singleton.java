@@ -35,4 +35,6 @@ public class Singleton {
         return connectedUsers.size();
     }
 
+    public Boolean isExist(Integer id){ return connectedUsers.containsKey(id); }
+
 }

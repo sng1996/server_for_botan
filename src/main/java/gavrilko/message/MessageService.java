@@ -14,35 +14,32 @@ import java.sql.SQLException;
  */
 public class MessageService {
 
-    public ResponseEntity get_contacts(Integer id) throws JsonProcessingException {
+    public ResponseEntity contacts(Integer id) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode response = mapper.createObjectNode();
         ArrayNode resp = mapper.createArrayNode();
         try {
-            Database.select("select id_o from orders where (client = " + id + " or executor = " + id + ") and status = 1", result->{
+            Database.select("select id_o from orders where (client = " + id + " or executor = " + id + ") and (status = 1 or status = 2 or status = 3 or status = 4)", result->{
                 while (result.next()) {
                     ObjectNode node = mapper.createObjectNode();
-                    Database.select("select message, sender, date, reciever from messages where date = (select max(date) from messages where id_o = " + result.getInt("id_o") + ")", result1->{
+                    Database.select("select id_c, first_id, second_id from chats where id_o = "+ result.getInt("id_o"), result1->{
                         result1.next();
-                        node.put("order_id", result.getInt("id_o"));
-                        if (result1.getInt("sender") == id){
-                            node.put("is_my", 1);
-                            Database.select("select name from profile where id_p = " + result1.getInt("reciever") + "", result2->{
+                        node.put("chat_id", result1.getInt("id_c"));
+                        if (result1.getInt("first_id") == id){
+                            Database.select("select name from profile where id_p = " + result1.getInt("second_id"), result2->{
                                 result2.next();
-                                node.put("companion_id", result1.getInt("reciever"));
-                                node.put("name", result2.getString("name"));
+                                node.put("target_id", result1.getInt("second_id"));
+                                node.put("target_name", result2.getString("name"));
                             });
                         }
                         else{
-                            node.put("is_my", 0);
-                            Database.select("select name from profile where id_p = " + result1.getInt("sender") + "", result2->{
+                            Database.select("select name from profile where id_p = " + result1.getInt("first_id"), result2->{
                                 result2.next();
-                                node.put("companion_id", result1.getInt("sender"));
-                                node.put("name", result2.getString("name"));
+                                node.put("target_id", result1.getInt("first_id"));
+                                node.put("target_name", result2.getString("name"));
                             });
                         }
-                        node.put("message", result1.getString("message"));
-                        node.put("date", result1.getString("date"));
+                        node.put("order_id", result.getInt("id_o"));
                     });
                     resp.add(node);
                 }
@@ -53,9 +50,11 @@ public class MessageService {
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            System.out.println("JSON problem");
             response.put("code", 1);
             response.put("response", 1);
         } catch (SQLException e) {
+            System.out.println("SQL problem");
             response.put("code", 2);
             response.put("response", 2);
         }
