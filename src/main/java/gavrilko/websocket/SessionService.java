@@ -26,21 +26,19 @@ public class SessionService {
 
     Singleton singleton = Singleton.getInstance();
     ObjectMapper mapper = new ObjectMapper();
-    final ObjectNode jsonMessage = mapper.createObjectNode();
-    final ObjectNode jsonResponse = mapper.createObjectNode();
 
     public void registerSession(WebSocketSession session, Integer id){
-        System.out.println("register");
         try {
             singleton.add(id, session);
         }catch (Exception e){
             System.out.println(e);
         }
-        System.out.println("add");
         System.out.println("client number " + singleton.size() + " was added!");
     }
 
     public void sendMessageToClient(Integer from_id, String msg, Integer to_id, Integer chat_id) throws IOException {
+        final ObjectNode jsonMessage = mapper.createObjectNode();
+        final ObjectNode jsonResponse = mapper.createObjectNode();
         jsonMessage.put("code", 0);
         jsonResponse.put("message", msg);
         jsonResponse.put("from_id", from_id);
@@ -67,7 +65,8 @@ public class SessionService {
 
     public void addMsgToDB(Integer from_id, String msg, Integer chat_id){
         try {
-            Database.update("insert into messages VALUES (NULL, " + from_id + ", " + msg + ", NULL, 1, " + chat_id + ");");
+            System.out.println("Add message to DB");
+            Database.update("insert into messages VALUES (NULL, " + from_id + ", \'" + msg + "\', NULL, 1, " + chat_id + ");");
         } catch (SQLException e) {
             System.out.println("SQL error, while get message via websocket");
         }
@@ -79,10 +78,10 @@ public class SessionService {
         final ArrayNode msges = mapper.createArrayNode();
         final ArrayNode chats = mapper.createArrayNode();
         try {
-            Database.select("select * from chats where first_id = " + id + " or second_id = " + id + ")",  result->{
+            Database.select("select id_c from chats where first_id = " + id + " or second_id = " + id,  result->{
                 while (result.next()) {
                     final ObjectNode chat = mapper.createObjectNode();
-                    Database.select("select * from messages where id_c = " + result.getInt("id_c") + ")",  result1->{
+                    Database.select("select * from messages where id_c = " + result.getInt("id_c"),  result1->{
                         while (result1.next()) {
                             Message msg = new Message(result1.getInt("id_m"), result1.getInt("sender_id"), result1.getString("text"), result1.getString("date"), result1.getInt("status"), result1.getInt("id_c"));
                             msges.add(msg.getMsgInfo());
@@ -97,13 +96,20 @@ public class SessionService {
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            response.put("code", 1);
-            response.put("response", 0);
+            response.put("code", 404);
+            response.put("response", "JSON error");
         } catch (SQLException e) {
-            response.put("code", 2);
-            response.put("response", 0);
+            response.put("code", 404);
+            response.put("response", "SQL error");
         }
+        System.out.println("SYNC DATA " + mapper.writeValueAsString(response));
         singleton.get(id).sendMessage(new TextMessage(mapper.writeValueAsString(response)));
+    }
+
+    public void messageDelivered(Integer id) throws IOException {
+        final ObjectNode jsonMessage = mapper.createObjectNode();
+        jsonMessage.put("code", 5);
+        singleton.get(id).sendMessage(new TextMessage(mapper.writeValueAsString(jsonMessage)));
     }
 
 }

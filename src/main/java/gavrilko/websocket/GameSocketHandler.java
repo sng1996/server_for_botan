@@ -54,6 +54,7 @@ public class GameSocketHandler extends TextWebSocketHandler {
                 if (sessionService.isExist(to_id)){
                     sessionService.sendMessageToClient(from_id, msg, to_id, chat_id);
                 }
+                sessionService.messageDelivered(from_id);
                 break;
             case 2://register session
                 id = Integer.valueOf(root.get("id").toString());

@@ -50,11 +50,11 @@ public class MessageService {
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            System.out.println("JSON problem");
+            System.out.println("JSON problem contacts");
             response.put("code", 1);
             response.put("response", 1);
         } catch (SQLException e) {
-            System.out.println("SQL problem");
+            System.out.println("SQL problem contacts");
             response.put("code", 2);
             response.put("response", 2);
         }
